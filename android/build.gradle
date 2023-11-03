@@ -3,9 +3,11 @@
 buildscript {
     ext {
         buildToolsVersion = "33.0.0"
-        minSdkVersion = 21
+        // 참고: 오디오 일시 정지/재개 기능을 위해서는 아래 변경 사항이 필요합니다. Kotlin에는 적합하지 않습니다.
+        minSdkVersion = 24
         compileSdkVersion = 33
         targetSdkVersion = 33
+        kotlinVersion = '1.6.10'
 
         // We use NDK 23 which has both M1 support and is the side-by-side NDK version from AGP.
         ndkVersion = "23.1.7779620"
