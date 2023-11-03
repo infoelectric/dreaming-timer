@@ -3,68 +3,23 @@
  */
 
 import { BoldStyledText, StyledText } from "@styles/GlobalStyles";
-import { WithLocalSvg } from "react-native-svg";
+
 import styled from "styled-components/native";
 
-import micIcon from "@assets/icon/mic.svg";
-
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
-import { useEffect, useState } from "react";
-
-const audioRecorderPlayer = new AudioRecorderPlayer();
+import Voice from "@assets/icon/voiceSelection.svg";
 
 const App = () => {
-  const [recordSecs, setRecordSecs] = useState(0);
-  const [recordTime, setRecordTime] = useState("");
-  const [isRecord, setIsRecord] = useState(false);
-
-  useEffect(() => {
-    audioRecorderPlayer.addRecordBackListener((e) => {
-      setRecordSecs(e.currentPosition);
-      setRecordTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
-    });
-
-    return () => {
-      audioRecorderPlayer.removeRecordBackListener();
-    };
-  }, []);
-
-  const onStartRecord = async () => {
-    await audioRecorderPlayer.startRecorder();
-    setIsRecord(true);
-  };
-
-  const onStopRecord = async () => {
-    const result = await audioRecorderPlayer.stopRecorder();
-    console.log(result);
-    setIsRecord(false);
-  };
-
-  const recording = () => {
-    onStartRecord();
-
-    setTimeout(() => {
-      onStopRecord();
-      console.log(recordTime);
-    }, 10000);
-  };
-
   return (
     <Container>
-      <FirstText>{"잰말놀이"}</FirstText>
-      <SecondText>{"아래 문장을 정확히 읽어주세요!"}</SecondText>
-      <Rectangle>
-        <Mission>{`만점 만점에 만점을 맞으면
-만점을 맞았으니 만점을 맞은 것이다.`}</Mission>
-      </Rectangle>
-      <Circle onPress={() => recording()}>
-        <WithLocalSvg
-          asset={micIcon}
-          width={60}
-          height={60}
-          fill={isRecord ? "tomato" : "#0E273C"}
-        />
-      </Circle>
+      <FirstText>{"수행 할 미션 선택"}</FirstText>
+      <MissionContainer>
+        <Voice width={60} height={60} fill={"#0E273C"} />
+        <AboutMission>
+          <MissionName>{"잰말놀이"}</MissionName>
+          <MissionContent>{`텅 트위스트 좋아해?
+발음하기 어려운 문장을 읽는 미션`}</MissionContent>
+        </AboutMission>
+      </MissionContainer>
     </Container>
   );
 };
@@ -72,6 +27,7 @@ const App = () => {
 const Container = styled.View`
   flex: 1;
   align-items: center;
+  padding: 40px;
 `;
 
 const FirstText = styled(BoldStyledText)`
@@ -79,39 +35,27 @@ const FirstText = styled(BoldStyledText)`
   margin-top: 70px;
 `;
 
-const SecondText = styled(StyledText)`
-  font-size: 24px;
-  margin-top: 27px;
-`;
+const MissionContainer = styled.View`
+  height: 90px;
+  margin-top: 26px;
+  width: 100%;
 
-const Rectangle = styled.View`
-  height: 252px;
-  width: 80%;
-
-  margin-top: 42px;
-
-  justify-content: center;
-  align-items: center;
-
-  border: 1px;
-  border-color: #a167a5;
   border-radius: 20px;
+  border-color: #4a306d;
+  border-width: 1px;
+
+  align-items: flex-start;
 `;
 
-const Mission = styled(StyledText)`
+const AboutMission = styled.View`
+  justify-content: flex-start;
+`;
+
+const MissionName = styled(BoldStyledText)`
   font-size: 18px;
-  text-align: center;
 `;
-
-const Circle = styled.Pressable`
-  height: 80px;
-  width: 80px;
-  border-radius: 40px;
-  background-color: #e8d7f1;
-  justify-content: center;
-  align-items: center;
-
-  margin-top: 88px;
+const MissionContent = styled(StyledText)`
+  font-size: 14px;
 `;
 
 export default App;
