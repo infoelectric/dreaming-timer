@@ -39,16 +39,19 @@ const MissionContainer = styled.View`
   height: 90px;
   margin-top: 26px;
   width: 100%;
+  padding-left: 15px;
 
   border-radius: 20px;
   border-color: #4a306d;
   border-width: 1px;
 
-  align-items: flex-start;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
 `;
 
 const AboutMission = styled.View`
-  justify-content: flex-start;
+  align-items: flex-start;
 `;
 
 const MissionName = styled(BoldStyledText)`
