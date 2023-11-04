@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import { Platform } from "react-native";
+import AudioRecorderPlayer from "react-native-audio-recorder-player";
+import { request, PERMISSIONS, Permission } from "react-native-permissions";
 
 import styled from "styled-components/native";
 
@@ -6,18 +9,16 @@ import { BoldStyledText, StyledText } from "@styles/GlobalStyles";
 
 import MicIcon from "@assets/icon/mic.svg";
 
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
-
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
-const TongueTwisterScreen = () => {
-  // const [recordSecs, setRecordSecs] = useState(0);
+const TongueTwisterScreen = ({ navigation }: any) => {
+  const [recordSecs, setRecordSecs] = useState(0);
   const [recordTime, setRecordTime] = useState("");
   const [isRecord, setIsRecord] = useState(false);
 
   useEffect(() => {
     audioRecorderPlayer.addRecordBackListener((e) => {
-      // setRecordSecs(e.currentPosition);
+      setRecordSecs(e.currentPosition);
       setRecordTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
     });
 
@@ -25,6 +26,29 @@ const TongueTwisterScreen = () => {
       audioRecorderPlayer.removeRecordBackListener();
     };
   }, []);
+
+  // 권한 요청 함수
+  const requestRecordAudioPermission = async () => {
+    let permission: Permission;
+    if (Platform.OS === "ios") {
+      permission = PERMISSIONS.IOS.MICROPHONE;
+    } else if (Platform.OS === "android") {
+      permission = PERMISSIONS.ANDROID.RECORD_AUDIO;
+    }
+
+    try {
+      const result = await request(permission!);
+      if (result === "granted") {
+        // 권한이 부여됨, 녹음을 시작할 수 있음
+        onStartRecord();
+      } else {
+        // 권한이 거부됨
+        console.log("녹음 권한이 거부되었습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const onStartRecord = async () => {
     await audioRecorderPlayer.startRecorder();
@@ -38,12 +62,16 @@ const TongueTwisterScreen = () => {
   };
 
   const recording = () => {
-    onStartRecord();
+    requestRecordAudioPermission(); // 권한 요청 추가
 
     setTimeout(() => {
-      onStopRecord();
-      console.log(recordTime);
-    }, 10000);
+      if (isRecord) {
+        onStopRecord();
+        console.log(recordTime);
+        console.log(recordSecs);
+        navigation.goBack();
+      }
+    }, 3000);
   };
 
   return (

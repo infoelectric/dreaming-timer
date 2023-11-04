@@ -7,7 +7,7 @@ import RankingScreen from "@screens/RankingScreen";
 import RecordScreen from "@screens/RecordScreen";
 
 import HomeIcon from "@assets/icon/home.svg";
-import TongueTwisterScreen from "@screens/missons/TongueTwisterScreen";
+import StackNavigator from "./StackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -27,13 +27,14 @@ const BottomTabNavigator = () => {
         tabBarStyle: {
           height: insets.bottom + 55,
         },
+        headerShown: false,
       })}
     >
       <Tab.Screen name="홈" component={HomeScreen} />
       <Tab.Screen name="랭킹" component={RankingScreen} />
       <Tab.Screen name="기록" component={RecordScreen} />
       {/* 미션은 추후 삭제해야 됨! */}
-      <Tab.Screen name="미션" component={TongueTwisterScreen} />
+      <Tab.Screen name="미션" component={StackNavigator} />
     </Tab.Navigator>
   );
 };
