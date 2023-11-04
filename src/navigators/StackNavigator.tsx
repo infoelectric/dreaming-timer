@@ -2,6 +2,7 @@ import { createStackNavigator } from "@react-navigation/stack";
 import DrinkingScreen from "@screens/missons/DrinkingScreen";
 import SelectionScreen from "@screens/missons/SelectionScreen";
 import TongueTwisterScreen from "@screens/missons/TongueTwisterScreen";
+import VentilatingScreen from "@screens/missons/VentilatingScreen";
 
 const Stack = createStackNavigator();
 
@@ -11,6 +12,7 @@ const StackNavigator = () => {
       <Stack.Screen name="미션선택" component={SelectionScreen} />
       <Stack.Screen name="잰말놀이" component={TongueTwisterScreen} />
       <Stack.Screen name="물 마시기" component={DrinkingScreen} />
+      <Stack.Screen name="환기하기" component={VentilatingScreen} />
     </Stack.Navigator>
   );
 };
