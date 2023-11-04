@@ -1,7 +1,10 @@
+import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import HomeScreen from "@screens/HomeScreen";
 import RankingScreen from "@screens/RankingScreen";
 import RecordScreen from "@screens/RecordScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeIcon from "@assets/icon/home.svg";
 import TongueTwisterScreen from "@screens/missons/TongueTwisterScreen";
@@ -13,12 +16,17 @@ const tabBarIcon = ({ color }: { color: string }) => {
 };
 
 const BottomTabNavigator = () => {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tab.Navigator
       screenOptions={() => ({
         tabBarIcon,
         tabBarActiveTintColor: "#A167A5",
         tabBarInactiveTintColor: "#0E273C",
+        tabBarStyle: {
+          height: insets.bottom + 55,
+        },
       })}
     >
       <Tab.Screen name="홈" component={HomeScreen} />
