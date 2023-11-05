@@ -1,4 +1,5 @@
 import { createStackNavigator } from "@react-navigation/stack";
+import HomeScreen from "@screens/HomeScreen";
 import DrinkingScreen from "@screens/missons/DrinkingScreen";
 import SelectionScreen from "@screens/missons/SelectionScreen";
 import TongueTwisterScreen from "@screens/missons/TongueTwisterScreen";
@@ -10,11 +11,13 @@ const Stack = createStackNavigator();
 const StackNavigator = () => {
   return (
     <Stack.Navigator
+      initialRouteName="Home"
       screenOptions={() => ({
         headerShown: false,
         cardStyle: { backgroundColor: "white" },
       })}
     >
+      <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="미션선택" component={SelectionScreen} />
       <Stack.Screen name="잰말놀이" component={TongueTwisterScreen} />
       <Stack.Screen name="물 마시기" component={DrinkingScreen} />

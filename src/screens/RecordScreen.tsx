@@ -32,8 +32,8 @@ const RecordScreen = () => {
       </DayContainer>
 
       <SevenDaysContainer>
-        {sevenDays.map((day) => (
-          <SevenDaysText>{day}</SevenDaysText>
+        {sevenDays.map((day, index) => (
+          <SevenDaysText key={index}>{day}</SevenDaysText>
         ))}
       </SevenDaysContainer>
 
