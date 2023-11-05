@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Animated, Dimensions, Easing, Pressable } from "react-native";
+import { Animated, Dimensions, Easing, Pressable, View } from "react-native";
 
 import styled from "styled-components/native";
 
@@ -15,6 +15,7 @@ import {
   startTimer,
   tick,
 } from "@redux/slice/timerSlice";
+import Detect from "@components/Home/Detect";
 
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -28,7 +29,9 @@ const HomeScreen = () => {
 
   const dynamicHeight = useRef(new Animated.Value(0)).current;
   const [expanded, setExpanded] = useState<boolean>(false);
-  const [formattedTime, setFormattedTime] = useState("00:00");
+  const [isPause, setIsPause] = useState<boolean>(false);
+  const [isDetect, setIsDetect] = useState<boolean>(false);
+  const [formattedTime, setFormattedTime] = useState("00:00:00");
 
   const today = new Date();
   const week = ["일", "월", "화", "수", "목", "금", "토"];
@@ -82,7 +85,7 @@ const HomeScreen = () => {
   useEffect(() => {
     let interval: NodeJS.Timeout;
 
-    if (isRunning) {
+    if (isRunning && !isPause) {
       interval = setInterval(() => {
         dispatch(tick());
       }, 1000);
@@ -93,21 +96,59 @@ const HomeScreen = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [isRunning, dispatch]);
+  }, [isRunning, dispatch, isPause]);
 
   // 타이머 초기화 함수
   // const handleReset = () => {
   //   dispatch(resetTimer());
   // };
 
+  useEffect(() => {
+    if (elapsedTime > 10) {
+      setIsPause(true);
+      setIsDetect(true);
+    }
+  }, [elapsedTime]);
+
   return (
     <Container>
-      <Pressable onPress={() => toggleExpand()}>
-        <TimerContainer style={[animatedStyle]} paddingTop={insets.top}>
-          <StyledText style={{ fontSize: 20 }}>{formattedDate}</StyledText>
-          <StyledText style={{ fontSize: 50 }}>{formattedTime}</StyledText>
-        </TimerContainer>
-      </Pressable>
+      {isDetect ? (
+        <Detect timer={formattedTime} />
+      ) : (
+        <Pressable
+          onPress={() => {
+            if (!isRunning) {
+              toggleExpand();
+            }
+          }}
+        >
+          <TimerContainer style={[animatedStyle]} paddingTop={insets.top}>
+            <StyledText style={{ fontSize: 20 }}>
+              {isRunning ? "오늘의 공부시간은..." : formattedDate}
+            </StyledText>
+            <StyledText style={{ fontSize: 50 }}>{formattedTime}</StyledText>
+            {isRunning && (
+              <View style={{ flexDirection: "row", gap: 30 }}>
+                <StopButton
+                  onPress={() => setIsPause((prev) => !prev)}
+                  color={"#A167A5"}
+                >
+                  <ButtonText>{"일시정지"}</ButtonText>
+                </StopButton>
+                <StopButton
+                  onPress={() => {
+                    setIsPause(false);
+                    toggleExpand();
+                  }}
+                  color={"#4A306D"}
+                >
+                  <ButtonText>{"타이머 종료"}</ButtonText>
+                </StopButton>
+              </View>
+            )}
+          </TimerContainer>
+        </Pressable>
+      )}
     </Container>
   );
 };
@@ -122,6 +163,19 @@ const TimerContainer = styled(Animated.View)<{ paddingTop: number }>`
   gap: 30px;
 
   background-color: #e8d7f1;
+`;
+
+const StopButton = styled.TouchableOpacity<{ color: string }>`
+  padding: 20px 25px;
+
+  border-radius: 20px;
+
+  background-color: ${(props) => props.color};
+`;
+
+const ButtonText = styled(StyledText)`
+  font-size: 20px;
+  color: white;
 `;
 
 export default HomeScreen;

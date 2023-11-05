@@ -6,8 +6,17 @@ import Air from "@assets/icon/air.svg";
 import Cup from "@assets/icon/cup.svg";
 import Wash from "@assets/icon/wash.svg";
 import Walk from "@assets/icon/walk.svg";
+import { useDispatch } from "react-redux";
+import { pauseTimer } from "@redux/slice/timerSlice";
+import { useEffect } from "react";
 
 const SelectionScreen = ({ navigation }: any) => {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(pauseTimer());
+  }, [dispatch]);
+
   return (
     <Container>
       <FirstText>{"수행 할 미션 선택"}</FirstText>
