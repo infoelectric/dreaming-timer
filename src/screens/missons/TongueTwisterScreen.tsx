@@ -12,20 +12,8 @@ import MicIcon from "@assets/icon/mic.svg";
 const audioRecorderPlayer = new AudioRecorderPlayer();
 
 const TongueTwisterScreen = ({ navigation }: any) => {
-  const [recordSecs, setRecordSecs] = useState(0);
-  const [recordTime, setRecordTime] = useState("");
+  // const [recordSecs, setRecordSecs] = useState(0);
   const [isRecord, setIsRecord] = useState(false);
-
-  useEffect(() => {
-    audioRecorderPlayer.addRecordBackListener((e) => {
-      setRecordSecs(e.currentPosition);
-      setRecordTime(audioRecorderPlayer.mmssss(Math.floor(e.currentPosition)));
-    });
-
-    return () => {
-      audioRecorderPlayer.removeRecordBackListener();
-    };
-  }, []);
 
   // 권한 요청 함수
   const requestRecordAudioPermission = async () => {
@@ -39,11 +27,17 @@ const TongueTwisterScreen = ({ navigation }: any) => {
     try {
       const result = await request(permission!);
       if (result === "granted") {
-        // 권한이 부여됨, 녹음을 시작할 수 있음
+        // 권한이 부여되어 녹음을 시작할 수 있음
         onStartRecord();
       } else {
+        console.log(result);
         // 권한이 거부됨
         console.log("녹음 권한이 거부되었습니다.");
+        // 권한 거부 시 처리기 추가
+        if (permission! === PERMISSIONS.IOS.MICROPHONE) {
+          console.log("마이크 권한이 거부되었습니다.");
+          // 여기에 마이크 권한 거부 시 처리할 작업 추가
+        }
       }
     } catch (error) {
       console.error(error);
@@ -62,17 +56,34 @@ const TongueTwisterScreen = ({ navigation }: any) => {
   };
 
   const recording = () => {
-    requestRecordAudioPermission(); // 권한 요청 추가
-
-    setTimeout(() => {
-      if (isRecord) {
-        onStopRecord();
-        console.log(recordTime);
-        console.log(recordSecs);
-        navigation.goBack();
-      }
-    }, 3000);
+    if (!isRecord) {
+      requestRecordAudioPermission(); // 권한 요청 추가
+    } else {
+      onStopRecord();
+    }
   };
+
+  // 녹음 시간 측정
+  // useEffect(() => {
+  //   audioRecorderPlayer.addRecordBackListener((e) => {
+  //     setRecordSecs(e.currentPosition);
+  //   });
+
+  //   return () => {
+  //     audioRecorderPlayer.removeRecordBackListener();
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    if (isRecord) {
+      const timeout = setTimeout(() => {
+        onStopRecord();
+        navigation.goBack();
+      }, 3000);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isRecord, navigation]);
 
   return (
     <Container>
@@ -95,12 +106,12 @@ const TongueTwisterScreen = ({ navigation }: any) => {
 
 const Container = styled.View`
   flex: 1;
+  justify-content: center;
   align-items: center;
 `;
 
 const FirstText = styled(BoldStyledText)`
   font-size: 36px;
-  margin-top: 70px;
 `;
 
 const SecondText = styled(StyledText)`
