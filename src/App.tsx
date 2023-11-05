@@ -2,14 +2,16 @@
  * @format
  */
 
-import { StatusBar } from "react-native";
-
+import { StatusBar, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import changeNavigationBarColor from "react-native-navigation-bar-color";
+
 import { NavigationContainer } from "@react-navigation/native";
 
 import BottomTabNavigator from "@navigators/BottomTabNavigator";
 
 const App = () => {
+  changeNavigationBarColor("transparent");
   return (
     <SafeAreaProvider>
       <StatusBar
@@ -18,7 +20,9 @@ const App = () => {
         barStyle={"dark-content"}
       />
       <NavigationContainer>
-        <BottomTabNavigator />
+        <View style={{ flex: 1, backgroundColor: "white" }}>
+          <BottomTabNavigator />
+        </View>
       </NavigationContainer>
     </SafeAreaProvider>
   );

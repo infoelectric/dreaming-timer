@@ -1,37 +1,25 @@
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import HomeScreen from "@screens/HomeScreen";
 import RankingScreen from "@screens/RankingScreen";
 import RecordScreen from "@screens/RecordScreen";
 
-import HomeIcon from "@assets/icon/home.svg";
 import StackNavigator from "./StackNavigator";
+import CustomTabBar from "@components/navigation/CustomTabBar";
 
 const Tab = createBottomTabNavigator();
 
-const tabBarIcon = ({ color }: { color: string }) => {
-  return <HomeIcon width={36} height={36} fill={color} />;
-};
+const tabBar = (props: any) => <CustomTabBar {...props} />;
 
 const BottomTabNavigator = () => {
-  const insets = useSafeAreaInsets();
-
   return (
     <Tab.Navigator
+      tabBar={tabBar}
+      sceneContainerStyle={{ backgroundColor: "white" }}
+      initialRouteName="홈"
       screenOptions={() => ({
-        tabBarIcon,
-        tabBarActiveTintColor: "#A167A5",
-        tabBarInactiveTintColor: "#0E273C",
-        tabBarStyle: {
-          height: insets.bottom + 55,
-          borderTopColor: "#A167A5",
-        },
         headerShown: false,
       })}
-      sceneContainerStyle={{ backgroundColor: "white", paddingTop: insets.top }}
-      initialRouteName="홈"
     >
       <Tab.Screen name="홈" component={HomeScreen} />
       <Tab.Screen name="랭킹" component={RankingScreen} />
