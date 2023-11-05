@@ -26,9 +26,12 @@ const BottomTabNavigator = () => {
         tabBarInactiveTintColor: "#0E273C",
         tabBarStyle: {
           height: insets.bottom + 55,
+          borderTopColor: "#A167A5",
         },
         headerShown: false,
       })}
+      sceneContainerStyle={{ backgroundColor: "white", paddingTop: insets.top }}
+      initialRouteName="홈"
     >
       <Tab.Screen name="홈" component={HomeScreen} />
       <Tab.Screen name="랭킹" component={RankingScreen} />
