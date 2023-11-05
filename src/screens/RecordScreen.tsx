@@ -9,7 +9,6 @@ import Wash from "@assets/icon/wash.svg";
 const RecordScreen = () => {
   const week = ["일", "월", "화", "수", "목", "금", "토"];
   let sevenDays = [5, 6, 7, 8, 9, 10, 11];
-
   const insets = useSafeAreaInsets();
 
   return (
@@ -114,7 +113,7 @@ const DateContainer = styled.View`
 
 const SevenDaysContainer = styled.View`
   flex-direction: row;
-  gap: 24px;
+  gap: 34px;
 `;
 
 const SevenDaytsLine = styled.View`
@@ -148,7 +147,7 @@ const Date = styled(StyledText)`
 
 const DayContainer = styled.View`
   flex-direction: row;
-  gap: 20px;
+  gap: 28px;
 `;
 
 const DayColor = styled(StyledText)`
