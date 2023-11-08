@@ -10,9 +10,12 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "@redux/reducers";
 import {
+  drowsinesDetection,
   pauseTimer,
+  resumeTimer,
   // resetTimer,
   startTimer,
+  stopTimer,
   tick,
 } from "@redux/slice/timerSlice";
 import Detect from "@components/Home/Detect";
@@ -23,14 +26,12 @@ const HomeScreen = () => {
   const insets = useSafeAreaInsets();
 
   const dispatch = useDispatch();
-  const { isRunning, elapsedTime } = useSelector(
+  const { isRunning, isPause, isDetect, elapsedTime } = useSelector(
     (state: RootState) => state.timer
   );
 
   const dynamicHeight = useRef(new Animated.Value(0)).current;
   const [expanded, setExpanded] = useState<boolean>(false);
-  const [isPause, setIsPause] = useState<boolean>(false);
-  const [isDetect, setIsDetect] = useState<boolean>(false);
   const [formattedTime, setFormattedTime] = useState("00:00:00");
 
   const today = new Date();
@@ -77,7 +78,7 @@ const HomeScreen = () => {
     if (expanded) {
       dispatch(startTimer());
     } else {
-      dispatch(pauseTimer());
+      dispatch(stopTimer());
     }
   }, [dispatch, expanded]);
 
@@ -104,11 +105,10 @@ const HomeScreen = () => {
   // };
 
   useEffect(() => {
-    if (elapsedTime > 10) {
-      setIsPause(true);
-      setIsDetect(true);
+    if (elapsedTime === 10) {
+      dispatch(drowsinesDetection());
     }
-  }, [elapsedTime]);
+  }, [dispatch, elapsedTime]);
 
   return (
     <Container>
@@ -130,18 +130,14 @@ const HomeScreen = () => {
             {isRunning && (
               <View style={{ flexDirection: "row", gap: 30 }}>
                 <StopButton
-                  onPress={() => setIsPause((prev) => !prev)}
+                  onPress={() =>
+                    isPause ? dispatch(resumeTimer()) : dispatch(pauseTimer())
+                  }
                   color={"#A167A5"}
                 >
-                  <ButtonText>{"일시정지"}</ButtonText>
+                  <ButtonText>{isPause ? "재개" : "일시정지"}</ButtonText>
                 </StopButton>
-                <StopButton
-                  onPress={() => {
-                    setIsPause(false);
-                    toggleExpand();
-                  }}
-                  color={"#4A306D"}
-                >
+                <StopButton onPress={() => toggleExpand()} color={"#4A306D"}>
                   <ButtonText>{"타이머 종료"}</ButtonText>
                 </StopButton>
               </View>

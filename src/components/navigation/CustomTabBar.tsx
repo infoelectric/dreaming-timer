@@ -44,8 +44,9 @@ const CustomTabBar = ({
 }: TabNavigationProps) => {
   const insets = useSafeAreaInsets();
 
-  // eslint-disable-next-line @typescript-eslint/no-shadow
-  const { isRunning } = useSelector((state: RootState) => state.timer);
+  const { isRunning, isDetect } = useSelector(
+    (rootState: RootState) => rootState.timer
+  );
 
   const translateY = useRef(new Animated.Value(0)).current;
   const [currentY, setCurrentY] = useState<number>(0);
@@ -62,7 +63,7 @@ const CustomTabBar = ({
   }, [translateY]);
 
   useEffect(() => {
-    if (isRunning) {
+    if (isRunning && !isDetect) {
       Animated.timing(translateY, {
         toValue: currentY + (70 + insets.bottom),
         duration: 300, // 애니메이션 지속 시간 (밀리초)
@@ -78,10 +79,10 @@ const CustomTabBar = ({
       }).start();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isRunning, insets]);
+  }, [isRunning, isDetect, insets]);
 
   return (
-    <Container isRunning={isRunning}>
+    <Container isRunning={isRunning && !isDetect}>
       <TabContainer
         marginBottom={insets.bottom}
         style={{ transform: [{ translateY }] }}

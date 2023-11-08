@@ -1,7 +1,12 @@
 import { useEffect, useState } from "react";
-import { Platform } from "react-native";
-import AudioRecorderPlayer from "react-native-audio-recorder-player";
+import { Platform, View } from "react-native";
+import AudioRecord from "react-native-audio-record";
 import { request, PERMISSIONS, Permission } from "react-native-permissions";
+import RNFS from "react-native-fs";
+
+import { useDispatch } from "react-redux";
+
+import axios from "axios";
 
 import styled from "styled-components/native";
 
@@ -9,11 +14,31 @@ import { BoldStyledText, StyledText } from "@styles/GlobalStyles";
 
 import MicIcon from "@assets/icon/mic.svg";
 
-const audioRecorderPlayer = new AudioRecorderPlayer();
+import { WakeUpDetection } from "@redux/slice/timerSlice";
+
+import Toast from "react-native-toast-message";
+
+const options = {
+  sampleRate: 16000, // 샘플레이트, 기본값은 44100
+  channels: 1, // 채널, 1 또는 2, 기본값은 1
+  bitsPerSample: 16, // 비트레이트, 8 또는 16, 기본값은 16
+  wavFile: "test.wav", // 파일 이름, 기본값은 audio.wav
+};
+
+AudioRecord.init(options);
+
+const missionSentences = [
+  "만점 만점에 만점을 맞으면 만점을 맞았으니 만점을 맞은 것이다.",
+  "간 구하려 광고해 간구한 강가의 관광객들.",
+];
 
 const TongueTwisterScreen = ({ navigation }: any) => {
-  // const [recordSecs, setRecordSecs] = useState(0);
-  const [isRecord, setIsRecord] = useState(false);
+  const dispatch = useDispatch();
+
+  const [isRecord, setIsRecord] = useState<boolean>(false);
+  const [audioData, setAudioData] = useState<string>("");
+  const [recognized, setRecognized] = useState<string>("");
+  const [missionSentence, setMissionSentence] = useState<string>("잰말놀이");
 
   // 권한 요청 함수
   const requestRecordAudioPermission = async () => {
@@ -45,14 +70,23 @@ const TongueTwisterScreen = ({ navigation }: any) => {
   };
 
   const onStartRecord = async () => {
-    await audioRecorderPlayer.startRecorder();
+    AudioRecord.start();
     setIsRecord(true);
   };
 
   const onStopRecord = async () => {
-    const result = await audioRecorderPlayer.stopRecorder();
-    console.log(result);
+    const audioFile = await AudioRecord.stop();
     setIsRecord(false);
+    convertAudioToBase64(audioFile);
+  };
+
+  const convertAudioToBase64 = async (audioFile: string) => {
+    try {
+      const convertedAudioData = await RNFS.readFile(audioFile, "base64");
+      setAudioData(convertedAudioData);
+    } catch (error) {
+      console.error("base64 변환 오류:", error);
+    }
   };
 
   const recording = () => {
@@ -63,35 +97,80 @@ const TongueTwisterScreen = ({ navigation }: any) => {
     }
   };
 
-  // 녹음 시간 측정
-  // useEffect(() => {
-  //   audioRecorderPlayer.addRecordBackListener((e) => {
-  //     setRecordSecs(e.currentPosition);
-  //   });
+  const fetchData = async (audio: string) => {
+    try {
+      const url = "http://aiopen.etri.re.kr:8000/WiseASR/Recognition";
+      const jsonData = {
+        argument: {
+          language_code: "korean",
+          audio,
+        },
+      };
 
-  //   return () => {
-  //     audioRecorderPlayer.removeRecordBackListener();
-  //   };
-  // }, []);
+      const response = await axios.post(url, JSON.stringify(jsonData), {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "e47b42e8-ae42-49fd-91b7-13da02eeaada",
+        },
+      });
+      setRecognized(response.data.return_object.recognized);
+    } catch (error) {
+      console.error("네트워크 오류:", error);
+      throw error;
+    }
+  };
+
+  useEffect(
+    () =>
+      setMissionSentence(
+        missionSentences[Math.floor(Math.random() * missionSentences.length)]
+      ),
+    []
+  );
 
   useEffect(() => {
-    if (isRecord) {
+    fetchData(audioData);
+  }, [audioData]);
+
+  useEffect(() => {
+    // 정규식 패턴: \s는 공백, \p{P}는 문장부호를 나타낸다.
+    const pattern = /[\s\p{P}]/gu;
+
+    // 정규식을 사용하여 문자열에서 띄어쓰기와 문장부호를 제거한다.
+    if (
+      missionSentence.replace(pattern, "") === recognized.replace(pattern, "")
+    ) {
+      Toast.show({
+        type: "success",
+        position: "bottom", // 토스트 메시지 위치 (top, bottom)
+        text1: "미션 성공!", // 메시지 제목
+        text2: "3초 후 타이머로 돌아갑니다!", // 메시지 내용
+        visibilityTime: 3000, // 토스트 메시지 표시 시간 (밀리초)
+      });
       const timeout = setTimeout(() => {
-        onStopRecord();
-        navigation.goBack();
+        setRecognized("");
+        dispatch(WakeUpDetection());
+        navigation.popToTop();
       }, 3000);
 
       return () => clearTimeout(timeout);
     }
-  }, [isRecord, navigation]);
+  }, [dispatch, missionSentence, navigation, recognized]);
 
   return (
     <Container>
       <FirstText>{"잰말놀이"}</FirstText>
       <SecondText>{"아래 문장을 정확히 읽어주세요!"}</SecondText>
       <Rectangle>
-        <Mission>{`만점 만점에 만점을 맞으면
-만점을 맞았으니 만점을 맞은 것이다.`}</Mission>
+        <Mission>{missionSentence}</Mission>
+        {recognized && !recognized.includes("ERROR") ? (
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <BoldStyledText style={{ fontSize: 20 }}>
+              {"내 음성"}
+            </BoldStyledText>
+            <Mission>{recognized}</Mission>
+          </View>
+        ) : null}
       </Rectangle>
       <Circle onPress={() => recording()}>
         <MicIcon
@@ -120,10 +199,13 @@ const SecondText = styled(StyledText)`
 `;
 
 const Rectangle = styled.View`
+  gap: 10px;
+
   height: 252px;
   width: 80%;
 
   margin-top: 42px;
+  padding: 20px;
 
   justify-content: center;
   align-items: center;
