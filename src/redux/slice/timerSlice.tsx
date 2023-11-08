@@ -5,6 +5,7 @@ export interface TimerState {
   isPause: boolean;
   isDetect: boolean;
   elapsedTime: number;
+  startTime: string;
 }
 
 const initialState: TimerState = {
@@ -12,6 +13,7 @@ const initialState: TimerState = {
   isPause: false,
   isDetect: false,
   elapsedTime: 0,
+  startTime: "",
 };
 
 const timerSlice = createSlice({
@@ -19,7 +21,9 @@ const timerSlice = createSlice({
   initialState,
   reducers: {
     startTimer: (state) => {
+      const currentDate = new Date();
       state.isRunning = true;
+      state.startTime = `${currentDate.getHours()}시 ${currentDate.getMinutes()}분`;
     },
     stopTimer: (state) => {
       state.isRunning = false;
@@ -33,6 +37,7 @@ const timerSlice = createSlice({
     resetTimer: (state) => {
       state.isRunning = false;
       state.elapsedTime = 0;
+      state.startTime = "0시 0분";
     },
     drowsinesDetection: (state) => {
       state.isPause = true;

@@ -1,10 +1,9 @@
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { ScrollView } from "react-native";
 import styled from "styled-components/native";
+
 import { BoldStyledText, StyledText } from "@styles/GlobalStyles";
-import Voice from "@assets/icon/voiceSelection.svg";
-import Wash from "@assets/icon/wash.svg";
+import RecordList from "@components/RecordList";
 
 const RecordScreen = () => {
   const week = ["일", "월", "화", "수", "목", "금", "토"];
@@ -39,41 +38,7 @@ const RecordScreen = () => {
 
       <SevenDaytsLine />
 
-      <ScrollView
-        style={{ width: "80%" }}
-        contentContainerStyle={{
-          borderRadius: 10,
-          borderWidth: 1,
-          borderColor: "#4a306d",
-        }}
-      >
-        <RecordContainer>
-          <Time>{"10시 30분"}</Time>
-          <MissionBox>
-            <MissionDetail>{"미션:잰말 놀이"}</MissionDetail>
-            <Wash width={30} height={30} fill={"#0E273C"} />
-          </MissionBox>
-          <MissionTime>{"미션 수행 시간: 15분"}</MissionTime>
-        </RecordContainer>
-
-        <RecordContainer>
-          <Time>{"13시 40분"}</Time>
-          <MissionBox>
-            <MissionDetail>{"미션:세수하기"}</MissionDetail>
-            <Voice width={30} height={30} fill={"#0E273C"} />
-          </MissionBox>
-          <MissionTime>{"미션 수행 시간: 10분"}</MissionTime>
-        </RecordContainer>
-
-        <RecordContainer>
-          <Time>{"16시 17분"}</Time>
-          <MissionBox>
-            <MissionDetail>{"미션:세수하기"}</MissionDetail>
-            <Voice width={30} height={30} fill={"#0E273C"} />
-          </MissionBox>
-          <MissionTime>{"미션 수행 시간: 10분"}</MissionTime>
-        </RecordContainer>
-      </ScrollView>
+      <RecordList />
     </Container>
   );
 };
@@ -158,38 +123,6 @@ const DayColor = styled(StyledText)`
 const Container = styled.View<{ marginTop: number }>`
   flex: 1;
   align-items: center;
-`;
-
-const RecordContainer = styled.View`
-  height: 152px;
-  align-items: flex-start;
-  justify-content: center;
-  padding-left: 20px;
-  border-bottom-width: 1px;
-  border-bottom-color: #4a306d;
-`;
-
-const Time = styled(StyledText)`
-  color: #4a306d;
-  font-size: 26px;
-  text-decoration-line: underline;
-  text-decoration-color: #4a306d;
-`;
-
-const MissionBox = styled.View`
-  flex-direction: row;
-  margin-top: 12px;
-`;
-
-const MissionDetail = styled(StyledText)`
-  font-size: 18px;
-  color: #0e273c;
-`;
-
-const MissionTime = styled(StyledText)`
-  font-size: 18px;
-  color: #0e273c;
-  margin-top: 10px;
 `;
 
 export default RecordScreen;

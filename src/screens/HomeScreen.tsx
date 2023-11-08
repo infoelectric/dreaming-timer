@@ -19,8 +19,9 @@ import {
   tick,
 } from "@redux/slice/timerSlice";
 import Detect from "@components/Home/Detect";
+import RecordList from "@components/RecordList";
 
-const { height: SCREEN_HEIGHT } = Dimensions.get("window");
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
 const HomeScreen = () => {
   const insets = useSafeAreaInsets();
@@ -115,35 +116,41 @@ const HomeScreen = () => {
       {isDetect ? (
         <Detect timer={formattedTime} />
       ) : (
-        <Pressable
-          onPress={() => {
-            if (!isRunning) {
-              toggleExpand();
-            }
-          }}
-        >
-          <TimerContainer style={[animatedStyle]} paddingTop={insets.top}>
-            <StyledText style={{ fontSize: 20 }}>
-              {isRunning ? "오늘의 공부시간은..." : formattedDate}
-            </StyledText>
-            <StyledText style={{ fontSize: 50 }}>{formattedTime}</StyledText>
-            {isRunning && (
-              <View style={{ flexDirection: "row", gap: 30 }}>
-                <StopButton
-                  onPress={() =>
-                    isPause ? dispatch(resumeTimer()) : dispatch(pauseTimer())
-                  }
-                  color={"#A167A5"}
-                >
-                  <ButtonText>{isPause ? "재개" : "일시정지"}</ButtonText>
-                </StopButton>
-                <StopButton onPress={() => toggleExpand()} color={"#4A306D"}>
-                  <ButtonText>{"타이머 종료"}</ButtonText>
-                </StopButton>
-              </View>
-            )}
-          </TimerContainer>
-        </Pressable>
+        <>
+          <Pressable
+            onPress={() => {
+              if (!isRunning) {
+                toggleExpand();
+              }
+            }}
+          >
+            <TimerContainer style={[animatedStyle]} paddingTop={insets.top}>
+              <StyledText style={{ fontSize: 20 }}>
+                {isRunning ? "오늘의 공부시간은..." : formattedDate}
+              </StyledText>
+              <StyledText style={{ fontSize: 50 }}>{formattedTime}</StyledText>
+              {isRunning && (
+                <View style={{ flexDirection: "row", gap: 30 }}>
+                  <StopButton
+                    onPress={() =>
+                      isPause ? dispatch(resumeTimer()) : dispatch(pauseTimer())
+                    }
+                    color={"#A167A5"}
+                  >
+                    <ButtonText>{isPause ? "재개" : "일시정지"}</ButtonText>
+                  </StopButton>
+                  <StopButton onPress={() => toggleExpand()} color={"#4A306D"}>
+                    <ButtonText>{"타이머 종료"}</ButtonText>
+                  </StopButton>
+                </View>
+              )}
+            </TimerContainer>
+          </Pressable>
+          <StyledText style={{ fontSize: 20 }}>
+            {"오늘의 공부 기록 및 수행 한 미션 목록"}
+          </StyledText>
+          <RecordList />
+        </>
       )}
     </Container>
   );
@@ -151,12 +158,16 @@ const HomeScreen = () => {
 
 const Container = styled.View`
   flex: 1;
+  align-items: center;
+  gap: 15px;
 `;
 
 const TimerContainer = styled(Animated.View)<{ paddingTop: number }>`
   justify-content: center;
   align-items: center;
   gap: 30px;
+
+  width: ${SCREEN_WIDTH}px;
 
   background-color: #e8d7f1;
 `;

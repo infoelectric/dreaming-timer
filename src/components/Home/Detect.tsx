@@ -13,7 +13,9 @@ const Detect = ({ timer }: DetectProps) => {
     <Container>
       <BoldStyledText style={{ fontSize: 36 }}>{"졸음 감지!"}</BoldStyledText>
       <StyledText style={{ fontSize: 48 }}>{timer}</StyledText>
-      <StyledText style={{ fontSize: 20 }}>{`타이머가 일시정지되었습니다!
+      <StyledText
+        style={{ fontSize: 20, textAlign: "center" }}
+      >{`타이머가 일시정지되었습니다!
 미션을 수행해 졸음 알림을 멈추세요!`}</StyledText>
       <StopButton
         onPress={() => navigation.navigate("미션선택" as never)}
@@ -27,6 +29,7 @@ const Detect = ({ timer }: DetectProps) => {
 
 const Container = styled.View`
   flex: 1;
+  width: 100%;
   justify-content: center;
   align-items: center;
   gap: 20px;

@@ -3,8 +3,9 @@ import { Platform, View } from "react-native";
 import AudioRecord from "react-native-audio-record";
 import { request, PERMISSIONS, Permission } from "react-native-permissions";
 import RNFS from "react-native-fs";
+import Toast from "react-native-toast-message";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import axios from "axios";
 
@@ -15,8 +16,9 @@ import { BoldStyledText, StyledText } from "@styles/GlobalStyles";
 import MicIcon from "@assets/icon/mic.svg";
 
 import { WakeUpDetection } from "@redux/slice/timerSlice";
-
-import Toast from "react-native-toast-message";
+import { accomplished } from "@redux/slice/missionRecordsSlice";
+import { RootState } from "@redux/reducers";
+import secondsToHMS from "@utils/secondsToHMS";
 
 const options = {
   sampleRate: 16000, // 샘플레이트, 기본값은 44100
@@ -34,6 +36,10 @@ const missionSentences = [
 
 const TongueTwisterScreen = ({ navigation }: any) => {
   const dispatch = useDispatch();
+
+  const { elapsedTime, startTime } = useSelector(
+    (state: RootState) => state.timer
+  );
 
   const [isRecord, setIsRecord] = useState<boolean>(false);
   const [audioData, setAudioData] = useState<string>("");
@@ -149,13 +155,27 @@ const TongueTwisterScreen = ({ navigation }: any) => {
       });
       const timeout = setTimeout(() => {
         setRecognized("");
+        dispatch(
+          accomplished({
+            time: startTime,
+            missionName: "잰말놀이",
+            timesOfStudy: secondsToHMS(elapsedTime),
+          })
+        );
         dispatch(WakeUpDetection());
         navigation.popToTop();
       }, 3000);
 
       return () => clearTimeout(timeout);
     }
-  }, [dispatch, missionSentence, navigation, recognized]);
+  }, [
+    dispatch,
+    elapsedTime,
+    missionSentence,
+    navigation,
+    recognized,
+    startTime,
+  ]);
 
   return (
     <Container>
