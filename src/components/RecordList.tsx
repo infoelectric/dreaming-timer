@@ -9,6 +9,7 @@ import { StyledText } from "@styles/GlobalStyles";
 
 import VoiceIcon from "@assets/icon/voiceSelection.svg";
 import CupIcon from "@assets/icon/cup.svg";
+import VentIcon from "@assets/icon/vent.svg";
 import WashIcon from "@assets/icon/wash.svg";
 import WalkIcon from "@assets/icon/walk.svg";
 
@@ -41,6 +42,10 @@ const iconConfig = [
   {
     name: "물 마시기",
     icon: <CupIcon width={24} height={24} fill="#0E273C" />,
+  },
+  {
+    name: "공부 환경 돌아보기",
+    icon: <VentIcon width={24} height={24} fill="#0E273C" />,
   },
   {
     name: "세수하기",

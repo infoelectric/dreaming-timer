@@ -21,7 +21,7 @@ import { RootState } from "@redux/reducers";
 
 import secondsToHMS from "@utils/secondsToHMS";
 
-const VentilatingScreen = ({ navigation }: any) => {
+const WashScreen = ({ navigation }: any) => {
   const dispatch = useDispatch();
 
   const { elapsedTime, startTime } = useSelector(
@@ -129,12 +129,9 @@ const VentilatingScreen = ({ navigation }: any) => {
     const classNames = recognizedDatas.map((item) => item.class);
 
     // "cup" 또는 "bottle" 중 하나라도 배열에 포함되어 있는지 확인
-    const isCheirPresent =
-      classNames.includes("cheir") ||
-      classNames.includes("laptop") ||
-      classNames.includes("keyboard");
+    const isPersonPresent = classNames.includes("person");
 
-    if (isCheirPresent) {
+    if (isPersonPresent) {
       Toast.show({
         type: "success",
         position: "bottom", // 토스트 메시지 위치 (top, bottom)
@@ -147,7 +144,7 @@ const VentilatingScreen = ({ navigation }: any) => {
         dispatch(
           accomplished({
             time: startTime,
-            missionName: "공부 환경 돌아보기",
+            missionName: "세수하기",
             timesOfStudy: secondsToHMS(elapsedTime),
           })
         );
@@ -160,7 +157,7 @@ const VentilatingScreen = ({ navigation }: any) => {
       Toast.show({
         type: "error",
         position: "bottom", // 토스트 메시지 위치 (top, bottom)
-        text1: "의자 인식 실패!", // 메시지 제목
+        text1: "인물 인식 실패!", // 메시지 제목
         text2: "카메라 버튼을 눌러 다시 촬영해주세요!", // 메시지 내용
         visibilityTime: 3000, // 토스트 메시지 표시 시간 (밀리초)
       });
@@ -172,9 +169,9 @@ const VentilatingScreen = ({ navigation }: any) => {
 
   return (
     <Container>
-      <FirstText>{"공부 환경 돌아보기"}</FirstText>
+      <FirstText>{"세수하기"}</FirstText>
       <SecondText>{`카메라 버튼을 눌러
-앉아있던 자리를 찍어주세요!`}</SecondText>
+거울샷을 찍어주세요!`}</SecondText>
       <Rectangle>
         {device === null ? (
           <ErrorMessage>{"카메라가 존재하지 않습니다!"}</ErrorMessage>
@@ -248,4 +245,4 @@ const Circle = styled.Pressable`
   margin-top: 88px;
 `;
 
-export default VentilatingScreen;
+export default WashScreen;

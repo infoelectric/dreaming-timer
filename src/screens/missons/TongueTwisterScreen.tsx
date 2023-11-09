@@ -82,6 +82,7 @@ const TongueTwisterScreen = ({ navigation }: any) => {
 
   const onStopRecord = async () => {
     const audioFile = await AudioRecord.stop();
+    console.log(audioFile);
     setIsRecord(false);
     convertAudioToBase64(audioFile);
   };
@@ -119,6 +120,7 @@ const TongueTwisterScreen = ({ navigation }: any) => {
           Authorization: "e47b42e8-ae42-49fd-91b7-13da02eeaada",
         },
       });
+
       setRecognized(response.data.return_object.recognized);
     } catch (error) {
       console.error("네트워크 오류:", error);

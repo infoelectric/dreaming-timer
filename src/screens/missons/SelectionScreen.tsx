@@ -1,14 +1,17 @@
+import { useEffect } from "react";
+
+import { useDispatch } from "react-redux";
+
 import styled from "styled-components/native";
 import { BoldStyledText, StyledText } from "@styles/GlobalStyles";
 
-import Voice from "@assets/icon/voiceSelection.svg";
-import Air from "@assets/icon/air.svg";
-import Cup from "@assets/icon/cup.svg";
-import Wash from "@assets/icon/wash.svg";
-import Walk from "@assets/icon/walk.svg";
-import { useDispatch } from "react-redux";
+import VoiceIcon from "@assets/icon/voiceSelection.svg";
+import VentIcon from "@assets/icon/vent.svg";
+import CupIcon from "@assets/icon/cup.svg";
+import WashIcon from "@assets/icon/wash.svg";
+import WalkIcon from "@assets/icon/walk.svg";
+
 import { pauseTimer } from "@redux/slice/timerSlice";
-import { useEffect } from "react";
 
 const SelectionScreen = ({ navigation }: any) => {
   const dispatch = useDispatch();
@@ -22,7 +25,7 @@ const SelectionScreen = ({ navigation }: any) => {
       <FirstText>{"수행 할 미션 선택"}</FirstText>
 
       <MissionContainer>
-        <Voice width={60} height={60} fill={"#0E273C"} />
+        <VoiceIcon width={60} height={60} fill={"#0E273C"} />
         <AboutMission onPress={() => navigation.navigate("잰말놀이")}>
           <MissionName>{"잰말놀이"}</MissionName>
           <MissionContent>{`텅 트위스트 좋아해?
@@ -31,7 +34,7 @@ const SelectionScreen = ({ navigation }: any) => {
       </MissionContainer>
 
       <MissionContainer>
-        <Cup width={60} height={60} fill={"#0E273C"} />
+        <CupIcon width={60} height={60} fill={"#0E273C"} />
         <AboutMission onPress={() => navigation.navigate("물 마시기")}>
           <MissionName>{"물 마시기"}</MissionName>
           <MissionContent>{`찬 물 마시고 정신 차리자!
@@ -40,16 +43,16 @@ const SelectionScreen = ({ navigation }: any) => {
       </MissionContainer>
 
       <MissionContainer>
-        <Air width={60} height={60} fill={"#0E273C"} />
-        <AboutMission onPress={() => navigation.navigate("환기하기")}>
-          <MissionName>{"환기하기"}</MissionName>
-          <MissionContent>{`답답한 공기를 내보내고 환기를 하자!
-창문을 열고, 열린 창문을 찍는 미션`}</MissionContent>
+        <VentIcon width={60} height={60} fill={"#0E273C"} />
+        <AboutMission onPress={() => navigation.navigate("공부 환경 돌아보기")}>
+          <MissionName>{"공부 환경 돌아보기"}</MissionName>
+          <MissionContent>{`자리에서 일어나 주의를 환기시키자!
+앉아있던 자리의 의자를 찍는 미션`}</MissionContent>
         </AboutMission>
       </MissionContainer>
 
       <MissionContainer>
-        <Wash width={60} height={60} fill={"#0E273C"} />
+        <WashIcon width={60} height={60} fill={"#0E273C"} />
         <AboutMission onPress={() => navigation.navigate("세수하기")}>
           <MissionName>{"세수하기"}</MissionName>
           <MissionContent>{`화장실 다녀오고 리프레시하자!
@@ -58,7 +61,7 @@ const SelectionScreen = ({ navigation }: any) => {
       </MissionContainer>
 
       <MissionContainer>
-        <Walk width={60} height={60} fill={"#0E273C"} />
+        <WalkIcon width={60} height={60} fill={"#0E273C"} />
         <AboutMission onPress={() => navigation.navigate("일정 거리 걷기")}>
           <MissionName>{"일정 거리 걷기"}</MissionName>
           <MissionContent>{`자리에만 앉아있지 말고 좀 걷자!
