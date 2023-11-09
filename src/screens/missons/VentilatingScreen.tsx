@@ -132,7 +132,8 @@ const VentilatingScreen = ({ navigation }: any) => {
     const isCheirPresent =
       classNames.includes("cheir") ||
       classNames.includes("laptop") ||
-      classNames.includes("keyboard");
+      classNames.includes("keyboard") ||
+      classNames.includes("book");
 
     if (isCheirPresent) {
       Toast.show({
@@ -160,7 +161,7 @@ const VentilatingScreen = ({ navigation }: any) => {
       Toast.show({
         type: "error",
         position: "bottom", // 토스트 메시지 위치 (top, bottom)
-        text1: "의자 인식 실패!", // 메시지 제목
+        text1: "책상 요소 인식 실패!", // 메시지 제목
         text2: "카메라 버튼을 눌러 다시 촬영해주세요!", // 메시지 내용
         visibilityTime: 3000, // 토스트 메시지 표시 시간 (밀리초)
       });
