@@ -4,6 +4,7 @@ module.exports = {
     "react-native-reanimated/plugin",
     [
       "module:react-native-dotenv",
+      "react-native-worklets-core/plugin",
       {
         moduleName: "@env",
         path: ".env",
