@@ -2,9 +2,9 @@ module.exports = {
   presets: ["module:metro-react-native-babel-preset"],
   plugins: [
     "react-native-reanimated/plugin",
+    "react-native-worklets-core/plugin",
     [
       "module:react-native-dotenv",
-      "react-native-worklets-core/plugin",
       {
         moduleName: "@env",
         path: ".env",
