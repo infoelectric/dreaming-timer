@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "@redux/reducers";
 import {
-  drowsinesDetection,
+  // drowsinesDetection,
   pauseTimer,
   resumeTimer,
   // resetTimer,
@@ -20,6 +20,7 @@ import {
 } from "@redux/slice/timerSlice";
 import Detect from "@components/Home/Detect";
 import RecordList from "@components/RecordList";
+import Detecting from "@components/Home/Detecting";
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get("window");
 
@@ -105,11 +106,11 @@ const HomeScreen = () => {
   //   dispatch(resetTimer());
   // };
 
-  useEffect(() => {
-    if (elapsedTime === 10) {
-      dispatch(drowsinesDetection());
-    }
-  }, [dispatch, elapsedTime]);
+  // useEffect(() => {
+  //   if (elapsedTime === 13) {
+  //     dispatch(drowsinesDetection());
+  //   }
+  // }, [dispatch, elapsedTime]);
 
   return (
     <Container>
@@ -128,6 +129,11 @@ const HomeScreen = () => {
               <StyledText style={{ fontSize: 20 }}>
                 {isRunning ? "오늘의 공부시간은..." : formattedDate}
               </StyledText>
+              {isRunning && (
+                <View style={{ width: 320, height: 180 }}>
+                  <Detecting />
+                </View>
+              )}
               <StyledText style={{ fontSize: 50 }}>{formattedTime}</StyledText>
               {isRunning && (
                 <View style={{ flexDirection: "row", gap: 30 }}>
