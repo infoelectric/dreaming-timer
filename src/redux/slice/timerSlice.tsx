@@ -46,6 +46,7 @@ const timerSlice = createSlice({
     WakeUpDetection: (state) => {
       state.isPause = false;
       state.isDetect = false;
+      state.elapsedTime = 0;
     },
     tick: (state) => {
       if (state.isRunning) {
